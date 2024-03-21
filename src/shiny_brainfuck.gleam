@@ -64,8 +64,8 @@ fn print_usage() -> Nil {
   io.print(ansi.yellow("Options") <> ":\n")
   io.print("  -h, --help      Show this help message.\n")
   io.print(
-    "  -m, --memory size  Set memory size (number of cells). "
-    <> "Default memory m is 32\n",
+    "  -m, --memory m  Set memory size (number of cells). "
+    <> "Default memory size is 32\n",
   )
 }
 
