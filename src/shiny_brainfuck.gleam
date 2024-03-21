@@ -1,50 +1,88 @@
 import gleam/io
 import gleam/result
+import gleam/int
 import gleam/string
 import gleam/list
 import gleam/bit_array
 import argv
 import simplifile
 import gleam/erlang
+import gleam_community/ansi
 
 pub fn main() {
   let args: List(String) = argv.load().arguments
-  io.debug(args)
+  use #(memory, source_path) <- result.try(parse_arguments(args))
+
+  let file = simplifile.read(source_path)
+  case file {
+    Ok(source) -> {
+      run(source, memory)
+    }
+    Error(error) -> {
+      print_file_error(source_path, error)
+      Error(Nil)
+    }
+  }
+}
+
+fn parse_arguments(args: List(String)) -> Result(#(Int, String), Nil) {
   case args {
-    [source_path] -> {
-      let file = simplifile.read(source_path)
-      case file {
-        Ok(source) -> {
-          run(source, 512)
-        }
-        Error(error) -> {
-          print_file_error(source_path, error)
-          Error(Nil)
-        }
-      }
+    ["-m", memory, source_path] | ["--memory", memory, source_path] -> {
+      use memory_int <- result.try(int.parse(memory))
+      Ok(#(memory_int, source_path))
+    }
+    ["-h", ..] | ["--help", ..] -> {
+      print_help()
+      Error(Nil)
     }
     _ -> {
+      io.print_error(
+        ansi.bold(ansi.bright_red("Argument error"))
+        <> ":\nbroken arguments.\n\n",
+      )
       print_usage()
       Error(Nil)
     }
   }
 }
 
-fn print_usage() {
-  io.println_error("Broken arguments.\n\nUsage:\n\tbrainfgl <source-file-path>")
+fn print_help() -> Nil {
+  io.print(
+    "shinybf — a Brainfuck interpreter in "
+    <> ansi.bright_magenta("Gleam")
+    <> " ⭐️\n\n",
+  )
+  print_usage()
+}
+
+fn print_usage() -> Nil {
+  io.print(ansi.yellow("Usage") <> ":  shinybf [options] <source-file>\n\n")
+  io.print(ansi.yellow("Options") <> ":\n")
+  io.print("  -h, --help      Show this help message.\n")
+  io.print(
+    "  -m, --memory size  Set memory size (number of cells). "
+    <> "Default memory m is 32\n",
+  )
 }
 
 fn print_file_error(source_path: String, error: simplifile.FileError) {
   case error {
     simplifile.Enoent ->
-      [source_path, ": no such file or directory"]
-      |> string.concat()
-      |> io.println_error()
+      io.println_error(
+        ansi.bold(ansi.bright_red("File error"))
+        <> ":\n"
+        <> source_path
+        <> ": no such file or directory",
+      )
     _ -> {
-      io.print(source_path <> ": FileError ")
-      io.debug(error)
-      io.print_error("\n")
-      Nil
+      io.println_error(
+        ansi.bold(ansi.bright_red("File error"))
+        <> ":\n"
+        <> source_path
+        <> ": "
+        <> string.inspect(error)
+        <> " (see https://hexdocs.pm/simplifile/simplifile.html)",
+      )
     }
   }
 }
