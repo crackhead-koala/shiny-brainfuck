@@ -1,25 +1,45 @@
-# shiny_brainfuck
+# Shiny Brainfuck ⭐️🧠
 
-[![Package Version](https://img.shields.io/hexpm/v/shiny_brainfuck)](https://hex.pm/packages/shiny_brainfuck)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/shiny_brainfuck/)
+A [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) interpreter in [Gleam ⭐️](https://gleam.run/)!
 
-```sh
-gleam add shiny_brainfuck
+This is not a serious project (duh...), just a small exercise for me to learn Gleam. Thus, the interpreter is implemented in the most straightforward way possible, with no optimizations at all. Try running the `mandelbrot.b` program from the examples folder in [this interpreter](https://copy.sh/brainfuck/?file=https://copy.sh/brainfuck/prog/mandelbrot.b) and then in mine to see what I mean ☠️🤹🏻🙈 (Heads up: it needs 512 cells of memory to work.)
+
+## Quick Start
+
+```shell
+$ ./bin/shinybf -h
+shinybf — a Brainfuck interpreter in Gleam ⭐️
+
+Usage:  shinybf [options] <source-file>
+
+Options:
+  -h, --help      Show this help message.
+  -m, --memory m  Set memory size (number of cells). Default memory size is 32
+
+$ ./bin/shinybf ./examples/hello.b
+Hello World!
 ```
-```gleam
-import shiny_brainfuck
 
-pub fn main() {
-  // TODO: An example of the project in use
-}
+## How to Use
+
+A pre-built binary is provided in `bin/shinybf`. You can also build the executable file yourself with
+
+```shell
+$ make all
+gleam run -m gleescript
+   Compiled in 0.01s
+    Running gleescript.main
+  Generated ./shiny_brainfuck
+cp ./shiny_brainfuck ./bin/shinybf
+rm ./shiny_brainfuck
+chmod +x ./bin/shinybf
 ```
 
-Further documentation can be found at <https://hexdocs.pm/shiny_brainfuck>.
+Or, alternatively, you can run the source directly
 
-## Development
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
+```shell
+$ gleam run -- -m 8 ./examples/hello.b
+   Compiled in 0.01s
+    Running shiny_brainfuck.main
+Hello World!
 ```
