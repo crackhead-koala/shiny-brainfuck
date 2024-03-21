@@ -27,14 +27,18 @@ pub fn main() {
 
 fn parse_arguments(args: List(String)) -> Result(#(Int, String), Nil) {
   case args {
+    [source_path] -> Ok(#(32, source_path))
+
     ["-m", memory, source_path] | ["--memory", memory, source_path] -> {
       use memory_int <- result.try(int.parse(memory))
       Ok(#(memory_int, source_path))
     }
+
     ["-h", ..] | ["--help", ..] -> {
       print_help()
       Error(Nil)
     }
+
     _ -> {
       io.print_error(
         ansi.bold(ansi.bright_red("Argument error"))
