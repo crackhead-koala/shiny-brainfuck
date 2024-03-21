@@ -17,6 +17,7 @@ gleam_stdlib = "~> 0.34 or ~> 1.0"
 gleam_erlang = "~> 0.25"
 simplifile = "~> 1.5"
 argv = "~> 1.0"
+gleam_community_ansi = "~> 1.4"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"
